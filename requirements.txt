@@ -1,0 +1,2 @@
+# No third-party Python packages are required at runtime.
+# Windows Python includes tkinter in the standard installer.
