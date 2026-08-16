@@ -127,3 +127,7 @@ The repository does **not** include personal crash dumps, local analysis history
 ## Development approach
 
 This project was developed iteratively from real diagnostic logs. Later releases focused on reducing false positives, separating evidence strength from telemetry quality, improving process lifecycle handling, and making diagnostic output easier to analyze with AI-assisted tooling.
+
+## License
+
+No open-source license is currently granted. The source code is published for portfolio and code-review purposes.
