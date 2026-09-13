@@ -1,133 +1,133 @@
 # BSOD Investigator
 
-Windows desktop utility for investigating BSOD crashes using crash dumps, Windows Event Log, driver metadata and historical correlation.
+Настольная утилита для Windows, предназначенная для расследования причин синих экранов смерти (BSOD) с помощью дампов сбоев, журнала событий Windows, метаданных драйверов и исторической корреляции.
 
-**Current version:** 1.6.0  
-**Platform:** Windows 10/11  
-**Language:** Python
+**Текущая версия:** 1.6.0  
+**Платформа:** Windows 10/11  
+**Язык:** Python
 
-> BSOD Investigator ranks evidence-backed driver candidates. A top suspect is a diagnostic hypothesis, not proof of fault.
+> BSOD Investigator ранжирует вероятных виновников среди драйверов на основе собранных доказательств. Главный подозреваемый — это диагностическая гипотеза, а не окончательное доказательство причины сбоя.
 
-## What it does
+## Возможности
 
-- analyzes `Minidump` and `MEMORY.DMP` files through Microsoft CDB/WinDbg;
-- extracts BugCheck data, crash time, exception context, faulting module, stack evidence and failure bucket information;
-- correlates dump evidence with Windows Event Log events around the actual crash time;
-- distinguishes direct crash evidence from weak/passive signals;
-- resolves third-party driver metadata using PE information and Windows driver-package data;
-- stores analysis history in SQLite and deduplicates multiple dump files from the same crash;
-- repairs legacy history records without deleting previous analyses;
-- maintains pre-crash telemetry snapshots for additional context;
-- monitors historically crash-related drivers separately from the general third-party driver inventory;
-- generates structured AI-friendly diagnostic bundles for later troubleshooting;
-- supports automatic UAC elevation and elevated startup through Windows Task Scheduler.
+- анализирует файлы `Minidump` и `MEMORY.DMP` через Microsoft CDB/WinDbg;
+- извлекает данные BugCheck, время сбоя, контекст исключения, проблемный модуль, сведения из стека и информацию о failure bucket;
+- сопоставляет данные из дампа с событиями журнала Windows Event Log вблизи фактического времени сбоя;
+- отделяет прямые признаки причины сбоя от слабых и косвенных сигналов;
+- определяет метаданные сторонних драйверов по PE-информации и данным пакетов драйверов Windows;
+- хранит историю анализов в SQLite и устраняет дублирование нескольких дампов, относящихся к одному и тому же сбою;
+- исправляет устаревшие записи истории без удаления предыдущих анализов;
+- сохраняет снимки телеметрии перед сбоем для дополнительного контекста;
+- отдельно отслеживает драйверы, которые исторически уже были связаны со сбоями, не смешивая их с общим списком сторонних драйверов;
+- формирует структурированные диагностические пакеты, удобные для последующего анализа с помощью ИИ;
+- поддерживает автоматический запрос повышения прав UAC и запуск с повышенными привилегиями через Планировщик заданий Windows.
 
-## Reliability and diagnostics
+## Надёжность и диагностика
 
-The project includes several safeguards intended for long-running diagnostic work:
+Проект включает ряд механизмов защиты, рассчитанных на длительную диагностическую работу:
 
-- a shared analyzer lock prevents parallel dump analyses;
-- CDB output is streamed live instead of being captured only after completion;
-- configurable CDB timeout, heartbeat and stage tracking;
-- cancellation with `terminate` / `kill` fallback;
-- explicit symbol warnings and timing information;
-- structured problem logs with JSON, Markdown and source context;
-- crash fingerprinting to avoid inflating repeat confidence by analyzing the same crash twice;
-- separate **culprit confidence** and **telemetry quality** scores.
+- общий lock анализатора предотвращает одновременный параллельный анализ нескольких дампов;
+- вывод CDB отображается потоково в реальном времени, а не только после завершения процесса;
+- настраиваемый тайм-аут CDB, heartbeat и отслеживание этапов анализа;
+- корректная отмена процесса с резервным переходом от `terminate` к `kill`;
+- явные предупреждения о проблемах с символами и измерение времени выполнения;
+- структурированные логи проблем в JSON и Markdown с контекстом источника;
+- формирование fingerprint сбоя, чтобы повторный анализ одного и того же падения не завышал уровень уверенности;
+- раздельные показатели **уверенности в виновнике** и **качества телеметрии**.
 
-## Project structure
+## Структура проекта
 
 ```text
 BSOD-Investigator/
-├── bsod_investigator.py       # Application source
-├── run.bat                    # Run from source on Windows
-├── build_exe.bat              # Build a standalone EXE with PyInstaller
-├── requirements.txt           # Runtime dependency notes
-├── CHANGELOG.md               # Version history
+├── bsod_investigator.py       # Исходный код приложения
+├── run.bat                    # Запуск из исходного кода в Windows
+├── build_exe.bat              # Сборка автономного EXE через PyInstaller
+├── requirements.txt           # Примечания по зависимостям времени выполнения
+├── CHANGELOG.md               # История версий
 ├── docs/
-│   ├── README_RU.md           # Detailed Russian documentation
-│   └── UPGRADE_FROM_1.5.md    # Upgrade notes
-└── .github/workflows/ci.yml   # Syntax + built-in self-test
+│   ├── README_RU.md           # Подробная русскоязычная документация
+│   └── UPGRADE_FROM_1.5.md    # Инструкция по обновлению
+└── .github/workflows/ci.yml   # Проверка синтаксиса + встроенный self-test
 ```
 
-## Requirements
+## Требования
 
-- Windows 10 or Windows 11;
+- Windows 10 или Windows 11;
 - Python 3.10+;
-- administrator privileges for protected crash dump access;
-- **Debugging Tools for Windows / `cdb.exe`** for full dump analysis.
+- права администратора для доступа к защищённым дампам сбоев;
+- **Debugging Tools for Windows / `cdb.exe`** для полноценного анализа дампов.
 
-No third-party Python package is required at runtime. The standard Windows Python installer includes Tkinter.
+Для работы программы не требуются сторонние Python-пакеты. Стандартный установщик Python для Windows уже включает Tkinter.
 
-## Run from source
+## Запуск из исходного кода
 
 ```bat
 run.bat
 ```
 
-or:
+или:
 
 ```bat
 py -3 bsod_investigator.py
 ```
 
-The application requests UAC elevation when needed.
+При необходимости приложение автоматически запрашивает повышение прав через UAC.
 
-## Self-test
+## Самотестирование
 
-The source includes a regression-style self-test covering dump parsing, event-log encoding repair, driver scoring, crash fingerprinting, duplicate-crash handling, legacy history repair and telemetry quality.
+В исходный код встроен регрессионный self-test, который проверяет разбор дампов, исправление кодировки журнала событий, оценку драйверов, формирование fingerprint сбоев, обработку повторяющихся падений, восстановление старых записей истории и оценку качества телеметрии.
 
 ```bat
 py -3 bsod_investigator.py --self-test
 ```
 
-During repository preparation, the following checks were run successfully with Python 3.13.5:
+При подготовке репозитория следующие проверки успешно выполнялись на Python 3.13.5:
 
 ```text
 python -m py_compile bsod_investigator.py
 python bsod_investigator.py --self-test
 ```
 
-## Build EXE
+## Сборка EXE
 
 ```bat
 build_exe.bat
 ```
 
-The script installs/updates PyInstaller and creates:
+Скрипт устанавливает или обновляет PyInstaller и создаёт файл:
 
 ```text
 dist\BSOD-Investigator.exe
 ```
 
-## Application data
+## Данные приложения
 
-Persistent data is stored under:
+Постоянные данные хранятся в каталоге:
 
 ```text
 %LOCALAPPDATA%\BSODInvestigator
 ```
 
-This includes configuration, SQLite history, reports, snapshots and runtime logs. Problem logs prefer a visible `Логи проблем` directory next to the application when writable and fall back to LocalAppData.
+Там находятся конфигурация, история SQLite, отчёты, снимки телеметрии и рабочие логи. Логи проблем по возможности записываются в видимую папку `Логи проблем` рядом с приложением, если каталог доступен для записи. В противном случае используется LocalAppData.
 
-These runtime artifacts are intentionally excluded from this repository.
+Эти рабочие файлы намеренно исключены из репозитория.
 
-## Privacy
+## Конфиденциальность
 
-Diagnostic logs can contain technical file paths, driver/process names, Windows version information and possibly the Windows profile name inside paths. Crash dumps may contain fragments of system memory and should be reviewed before sharing with third parties.
+Диагностические логи могут содержать технические пути к файлам, имена драйверов и процессов, сведения о версии Windows, а также имя профиля Windows внутри путей. Дампы сбоев могут содержать фрагменты системной памяти, поэтому перед передачей третьим лицам их следует проверять.
 
-The repository does **not** include personal crash dumps, local analysis history, runtime databases or collected diagnostic logs.
+Репозиторий **не содержит** персональные дампы сбоев, локальную историю анализов, рабочие базы данных или собранные диагностические логи.
 
-## Documentation
+## Документация
 
-- [Detailed Russian documentation](docs/README_RU.md)
-- [Changelog](CHANGELOG.md)
-- [Upgrade from 1.5](docs/UPGRADE_FROM_1.5.md)
+- [Подробная документация на русском языке](docs/README_RU.md)
+- [История изменений](CHANGELOG.md)
+- [Обновление с версии 1.5](docs/UPGRADE_FROM_1.5.md)
 
-## Development approach
+## Подход к разработке
 
-This project was developed iteratively from real diagnostic logs. Later releases focused on reducing false positives, separating evidence strength from telemetry quality, improving process lifecycle handling, and making diagnostic output easier to analyze with AI-assisted tooling.
+Проект развивался итеративно на основе реальных диагностических логов. В более поздних версиях основной упор был сделан на уменьшение количества ложных срабатываний, разделение силы доказательств и качества телеметрии, улучшение управления жизненным циклом процессов и повышение удобства диагностических данных для анализа с помощью ИИ-инструментов.
 
-## License
+## Лицензия
 
-No open-source license is currently granted. The source code is published for portfolio and code-review purposes.
+В настоящее время открытая лицензия не предоставляется. Исходный код опубликован для демонстрации в портфолио и проведения code review.
