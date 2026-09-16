@@ -1,3 +1,5 @@
+**Язык / Language:** **Русский** · [English](README_EN.md)
+
 # BSOD Investigator
 
 **BSOD Investigator** — диагностическая программа для Windows, которая помогает расследовать причины синих экранов смерти (BSOD). Она анализирует дампы памяти через Microsoft CDB/WinDbg, сопоставляет результаты с событиями Windows Event Log, данными драйверов и историей прошлых сбоев.
