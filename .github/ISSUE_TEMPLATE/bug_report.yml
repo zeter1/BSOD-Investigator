@@ -1,0 +1,80 @@
+name: Сообщить об ошибке
+description: Сообщение о проблеме BSOD Investigator
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за сообщение. Для диагностики особенно важны версия Windows, версия приложения и точные шаги воспроизведения.
+        ВАЖНО: crash dump может содержать фрагменты системной памяти. Не прикладывайте дамп публично, если не уверены в его содержимом. Перед публикацией логов проверьте пути, имена пользователей и другие потенциально чувствительные данные.
+
+  - type: input
+    id: app_version
+    attributes:
+      label: Версия BSOD Investigator
+      placeholder: "например: 1.6.0"
+    validations:
+      required: true
+
+  - type: input
+    id: windows_version
+    attributes:
+      label: Windows
+      placeholder: "например: Windows 11 24H2"
+    validations:
+      required: true
+
+  - type: input
+    id: cdb_version
+    attributes:
+      label: CDB / WinDbg
+      description: Если проблема связана с анализом дампа, укажите версию Debugging Tools for Windows.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Что произошло
+      description: Опишите ошибку или неверный результат анализа.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как воспроизвести
+      placeholder: |
+        1. Запустить программу
+        2. Выбрать дамп ...
+        3. Запустить анализ
+        4. Получить ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемое поведение
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostic_summary
+    attributes:
+      label: Диагностическая сводка
+      description: Вставьте безопасную часть отчёта/лога. Не публикуйте сам dump-файл, если не проверили его содержимое.
+
+  - type: textarea
+    id: symbols
+    attributes:
+      label: Сообщения о символах WinDbg/CDB
+      description: Если они есть, приложите небольшой релевантный фрагмент.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Проверки
+      options:
+        - label: Я проверил проблему на текущей версии проекта.
+          required: true
+        - label: Я не публикую crash dump или чувствительные диагностические данные без предварительной проверки.
+          required: true
