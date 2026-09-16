@@ -102,11 +102,19 @@ BSOD-Investigator/
 ├── build_exe.bat              # сборка EXE
 ├── requirements.txt
 ├── CHANGELOG.md
+├── SECURITY.md
 ├── docs/
+│   ├── ARCHITECTURE.md
 │   ├── README_RU.md
 │   └── UPGRADE_FROM_1.5.md
-└── .github/workflows/ci.yml
+└── .github/
+    ├── ISSUE_TEMPLATE/
+    │   └── bug_report.yml
+    └── workflows/
+        └── ci.yml
 ```
+
+Подробная карта pipeline, scoring, persistence и границ подсистем находится в [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Самотестирование
 
@@ -148,11 +156,15 @@ Crash dump может содержать фрагменты системной �
 
 Репозиторий не содержит пользовательские дампы, локальную историю анализов или рабочие диагностические данные.
 
+Подробнее о безопасной публикации диагностических материалов: [`SECURITY.md`](SECURITY.md).
+
 ## Документация
 
+- [Архитектура и pipeline](docs/ARCHITECTURE.md)
 - [Подробная документация](docs/README_RU.md)
 - [История изменений](CHANGELOG.md)
 - [Обновление с версии 1.5](docs/UPGRADE_FROM_1.5.md)
+- [Security / diagnostic data](SECURITY.md)
 
 ## Лицензия
 
