@@ -8,15 +8,22 @@ cd /d "%~dp0"
 rem ============================================================================
 rem BSOD Investigator - reproducible Windows EXE builder
 rem What it does:
-rem   1. Finds a tested Python 3.13, or installs it for the current user via winget.
-rem   2. Creates an isolated .build-venv (does not pollute your normal Python).
-rem   3. Installs the pinned PyInstaller toolchain into that environment.
-rem   4. Compiles the source and runs the safe source self-test.
-rem   5. Cleans stale build/dist output and builds dist\BSOD-Investigator.exe.
-rem   6. Runs the SAFE self-test on the packaged EXE and fails if it is broken.
+rem   1. Finds tested Python 3.13, or installs it for the current user via winget.
+rem   2. Creates isolated .build-venv (your normal Python stays untouched).
+rem   3. Installs pinned PyInstaller packaging tools.
+rem   4. Compiles the source and runs the safe Windows self-test.
+rem   5. Cleans stale output and builds dist\BSOD-Investigator.exe.
+rem   6. Runs the same safe self-test on the packaged EXE.
+rem
+rem Windows note: build_support\sqlite_context_close.py is intentionally loaded
+rem during Windows tests and as a PyInstaller runtime hook. sqlite3's native
+rem context manager commits/rolls back but does not close the connection; the
+rem project scopes its DB connections with "with", so explicit close prevents
+rem lingering history.sqlite3 handles and makes packaged cleanup deterministic.
 rem
 rem Double-click this file for a normal build.
 rem CI/automation may call: build_exe.bat --ci
+rem Full instructions: BUILD_EXE.md
 rem ============================================================================
 
 set "NO_PAUSE="
@@ -48,9 +55,9 @@ if not exist "%BUILD_PY%" (
 echo [2/6] Installing packaging toolchain...
 "%BUILD_PY%" -m pip install --disable-pip-version-check --no-input --timeout 60 --retries 2 "pyinstaller==6.22.3" "pyinstaller-hooks-contrib>=2026.6" || goto :fail
 
-echo [3/6] Compiling source and running safe source self-test...
-"%BUILD_PY%" -m py_compile bsod_investigator.py || goto :fail
-"%BUILD_PY%" bsod_investigator.py --self-test || goto :fail
+echo [3/6] Compiling source and running safe Windows self-test...
+"%BUILD_PY%" -m py_compile bsod_investigator.py build_support\sqlite_context_close.py || goto :fail
+"%BUILD_PY%" -c "import runpy,sys; import build_support.sqlite_context_close; sys.argv=['bsod_investigator.py','--self-test']; runpy.run_path('bsod_investigator.py', run_name='__main__')" || goto :fail
 
 echo [4/6] Cleaning previous build...
 if exist build rmdir /s /q build
@@ -63,6 +70,7 @@ echo [5/6] Building BSOD-Investigator.exe...
   --clean ^
   --onefile ^
   --windowed ^
+  --runtime-hook "build_support\sqlite_context_close.py" ^
   --name "BSOD-Investigator" ^
   bsod_investigator.py || goto :fail
 
