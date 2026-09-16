@@ -31,3 +31,27 @@ jobs:
 
       - name: Run built-in self-test
         run: python bsod_investigator.py --self-test
+
+  package-windows:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[package]'))
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Build and smoke-test packaged EXE
+        shell: cmd
+        run: build_exe.bat --ci
+
+      - name: Verify packaged artifact exists
+        shell: pwsh
+        run: |
+          if (-not (Test-Path 'dist\BSOD-Investigator.exe')) { throw 'EXE was not created' }
+          Get-Item 'dist\BSOD-Investigator.exe' | Format-List Name,Length,LastWriteTime
