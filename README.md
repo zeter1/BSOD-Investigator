@@ -12,6 +12,15 @@
 
 > Главный подозреваемый — диагностическая гипотеза на основе собранных признаков, а не окончательное доказательство причины сбоя.
 
+## Скачать готовую Windows-версию
+
+Готовый **Windows `.exe`** публикуется на странице [GitHub Releases](https://github.com/zeter1/BSOD-Investigator/releases). Для запуска бинарника установленный Python не нужен.
+
+Рядом с EXE публикуется SHA-256, а GitHub Actions перед релизом запускает встроенный self-test и packaged smoke-test.
+
+> Для полноценного анализа дампов памяти по-прежнему нужен Microsoft `cdb.exe` из **Debugging Tools for Windows / Windows SDK** — он не входит в бинарник.
+
+
 ## Что демонстрирует проект
 
 - работу с Windows crash dumps, WinDbg/CDB и Windows Event Log;
