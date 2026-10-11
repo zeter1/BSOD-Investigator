@@ -12,6 +12,18 @@ The project is designed as an engineering diagnostic tool rather than a single-s
 
 > The primary suspect is a diagnostic hypothesis based on the available evidence, not definitive proof of a root cause.
 
+## Download and run on Windows
+
+> Windows builds are marked **Prerelease**: they are preliminary builds for testing. A release build may differ from the current source.
+
+1. Open [GitHub Releases](https://github.com/zeter1/BSOD-Investigator/releases) and expand **Assets** for the build you choose.
+2. Download and run `BSOD-Investigator.exe`.
+3. Select a crash dump and start analysis. The application requests UAC elevation when needed to read protected files.
+
+Python is included. Full dump analysis needs **Microsoft `cdb.exe` from Debugging Tools for Windows / Windows SDK**, which is not included in the binary. The suspected cause remains a diagnostic hypothesis.
+
+A SHA-256 file is published beside the EXE. CI self-tests and packaged smoke tests do not verify the cause of a particular BSOD.
+
 ## What this project demonstrates
 
 - Windows crash-dump analysis with WinDbg/CDB and Event Log data;
@@ -36,7 +48,7 @@ The project is designed as an engineering diagnostic tool rather than a single-s
 - structured JSON/Markdown diagnostics suitable for technical analysis and ChatGPT/Codex workflows;
 - automatic UAC elevation when required.
 
-## Installation
+## Installation from source
 
 ### 1. Install Python
 
@@ -57,7 +69,7 @@ cd BSOD-Investigator
 
 The core application does not require third-party Python packages. Tkinter is included in the standard Windows Python installation.
 
-## Running
+## Running from source
 
 The simplest option:
 
