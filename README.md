@@ -197,7 +197,7 @@ Crash dump может содержать фрагменты системной �
 
 Открытая лицензия в настоящее время не предоставляется. Исходный код опубликован для портфолио, ознакомления с реализацией и code review.
 
-## Контакты для связи с разработчиком
+## Контакты для связи:
 
 - [zeter11@gmail.com](mailto:zeter11@gmail.com)
 - [https://t.me/zeter1](https://t.me/zeter1)
@@ -209,4 +209,5 @@ Crash dump может содержать фрагменты системной �
 - [https://x.com/zeter1](https://x.com/zeter1)
 - [https://www.threads.com/@zeter1992](https://www.threads.com/@zeter1992)
 - [https://ok.ru/zeter1](https://ok.ru/zeter1)
-- [https://t.me/zeterchat](https://t.me/zeterchat) — Telegram-группа: обо мне, проекты и чат
+- [https://t.me/zeterchat](https://t.me/zeterchat) - Telegram-группа для общения
+- [https://dkoles.com/](https://dkoles.com/) - сайт.
